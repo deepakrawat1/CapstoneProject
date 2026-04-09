@@ -1,0 +1,32 @@
+2026-04-09T21:02:51.502+05:30  INFO 20849 --- [UserManagementService] [main] c.d.u.UserManagementServiceApplication   : Starting UserManagementServiceApplication using Java 24.0.2 with PID 20849 (/Volumes/Data/Backend Project Woolf/UserManagementService/target/classes started by deepakrawat in /Volumes/Data/Backend Project Woolf/UserManagementService)
+2026-04-09T21:02:51.507+05:30  INFO 20849 --- [UserManagementService] [main] c.d.u.UserManagementServiceApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-04-09T21:02:52.309+05:30  INFO 20849 --- [UserManagementService] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-09T21:02:52.367+05:30  INFO 20849 --- [UserManagementService] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 48 ms. Found 1 JPA repository interface.
+2026-04-09T21:02:52.922+05:30  INFO 20849 --- [UserManagementService] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-04-09T21:02:52.937+05:30  INFO 20849 --- [UserManagementService] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-04-09T21:02:52.937+05:30  INFO 20849 --- [UserManagementService] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-04-09T21:02:52.994+05:30  INFO 20849 --- [UserManagementService] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1412 ms
+2026-04-09T21:02:53.087+05:30  WARN 20849 --- [UserManagementService] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/hibernate/autoconfigure/HibernateJpaConfiguration.class]: Failed to initialize dependency 'dataSourceScriptDatabaseInitializer' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/jdbc/autoconfigure/DataSourceInitializationAutoConfiguration.class]: Unsatisfied dependency expressed through method 'dataSourceScriptDatabaseInitializer' parameter 0: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/jdbc/autoconfigure/DataSourceConfiguration$Hikari.class]: Failed to instantiate [com.zaxxer.hikari.HikariDataSource]: Factory method 'dataSource' threw exception with message: Failed to determine a suitable driver class
+2026-04-09T21:02:53.092+05:30  INFO 20849 --- [UserManagementService] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-04-09T21:02:53.107+05:30  INFO 20849 --- [UserManagementService] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-04-09T21:02:53.125+05:30 ERROR 20849 --- [UserManagementService] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+
+Reason: Failed to determine a suitable driver class
+
+
+Action:
+
+Consider the following:
+	If you want an embedded database (H2, HSQL or Derby), please put it on the classpath.
+	If you have database settings to be loaded from a particular profile you may need to activate it (no profiles are currently active).
+
