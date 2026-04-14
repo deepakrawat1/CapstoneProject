@@ -1,0 +1,19 @@
+package com.deepak.usermanagementservice.validation.annotation;
+
+import com.deepak.usermanagementservice.validation.validator.GenderValidator;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+
+import java.lang.annotation.*;
+
+@Documented
+@Constraint(validatedBy = GenderValidator.class)
+@Target({ ElementType.FIELD })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ValidGender {
+    String message() default "Invalid gender value";
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
+}

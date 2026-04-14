@@ -21,7 +21,7 @@ public class UserService {
         }
 
         User user = req.convertToUser();
-        user.setProvider("LOCAL");
+        //user.setProvider("LOCAL");
         user.setPassword(_bCryptPasswordEncoder.encode(user.getPassword()));
         user.setActive(true);
         user.setDeleted(false);

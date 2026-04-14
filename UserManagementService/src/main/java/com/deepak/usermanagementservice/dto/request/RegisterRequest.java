@@ -1,6 +1,8 @@
 package com.deepak.usermanagementservice.dto.request;
 
+import com.deepak.usermanagementservice.enums.Gender;
 import com.deepak.usermanagementservice.models.User;
+import com.deepak.usermanagementservice.validation.annotation.ValidGender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -11,20 +13,24 @@ import lombok.Setter;
 @Setter
 public class RegisterRequest {
     @NotBlank(message = "Name is required")
-    @Size(min = 3, max = 50)
+    @Size(min = 3, max = 50, message = "Name size must be between 3 and 50")
     private String name;
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
     private String email;
     @NotBlank(message = "Password is required")
-    @Size(min = 6, max = 50)
+    @Size(min = 6, max = 50, message = "Password size must be between 6 and 50")
     private String password;
+    @NotBlank(message = "Gender is required")
+    @ValidGender
+    private String gender;
 
     public User convertToUser() {
         User user = new User();
         user.setName(this.name);
-        user.setEmail(email);
-        user.setPassword(password);
+        user.setEmail(this.email);
+        user.setPassword(this.password);
+        user.setGender(Gender.valueOf(this.gender.toUpperCase()));
         return user;
     }
 }
