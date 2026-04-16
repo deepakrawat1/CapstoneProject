@@ -1,7 +1,4 @@
 package com.deepak.usermanagementservice.dto.request;
-
-import com.deepak.usermanagementservice.enums.Gender;
-import com.deepak.usermanagementservice.models.User;
 import com.deepak.usermanagementservice.validation.annotation.ValidGender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -24,13 +21,4 @@ public class RegisterRequest {
     @NotBlank(message = "Gender is required")
     @ValidGender
     private String gender;
-
-    public User convertToUser() {
-        User user = new User();
-        user.setName(this.name);
-        user.setEmail(this.email);
-        user.setPassword(this.password);
-        user.setGender(Gender.valueOf(this.gender.toUpperCase()));
-        return user;
-    }
 }
