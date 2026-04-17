@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class JWTUtil {
@@ -15,11 +17,28 @@ public class JWTUtil {
     private String _secret;
 
     public String generateToken(String email) {
+
+        Map<String, Object> payload = new HashMap<>();
+        Long nowInMills = System.currentTimeMillis();
+        payload.put("iat", nowInMills);
+        payload.put("exp", nowInMills + (60*60*1000));
+        payload.put("sub" ,email);
+        payload.put("iss", "scaler");
+
         return Jwts.builder()
-                .setSubject(email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour
+                .claims(payload)
                 .signWith(Keys.hmacShaKeyFor(_secret.getBytes()))
                 .compact();
+    }
+
+    public Map<String,Object> extractPayload(String token){
+
+         Map<String, Object> payload = Jwts.parser()
+                 .verifyWith(Keys.hmacShaKeyFor(_secret.getBytes()))
+                 .build()
+                 .parseSignedClaims(token)
+                 .getPayload();
+
+         return  payload;
     }
 }

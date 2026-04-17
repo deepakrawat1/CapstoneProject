@@ -2,6 +2,8 @@ package com.deepak.usermanagementservice.services;
 
 import com.deepak.usermanagementservice.dto.request.LoginRequest;
 import com.deepak.usermanagementservice.dto.request.RegisterRequest;
+import com.deepak.usermanagementservice.dto.request.UpdateProfileRequest;
+import com.deepak.usermanagementservice.dto.response.GetProfileResponse;
 import com.deepak.usermanagementservice.enums.AuthProvider;
 import com.deepak.usermanagementservice.enums.Gender;
 import com.deepak.usermanagementservice.exception.AppException;
@@ -147,7 +149,7 @@ public class UserService {
         throw new AppException("Invalid provider token");
     }
 
-    public Map<String, Object> verifyFacebook(String token) {
+    private Map<String, Object> verifyFacebook(String token) {
 
         try {
             RestTemplate restTemplate = new RestTemplate();
@@ -161,5 +163,27 @@ public class UserService {
         } catch (Exception e) {
             throw new AppException("Invalid provider token");
         }
+    }
+
+    public GetProfileResponse getProfile(String token){
+        GetProfileResponse res = new GetProfileResponse();
+        Map<String, Object> payload = _jwtUtil.extractPayload(token);
+        String email = payload.get("sub").toString();
+        User user = _userRepository.findByEmail(email).orElseThrow(() -> new AppException("User not found"));
+        res.setName(user.getName());
+        res.setEmail(user.getEmail());
+        res.setGender(user.getGender().name());
+        res.setProvider(user.getProvider().name());
+        return res;
+    }
+
+    public void updateProfile(String token, UpdateProfileRequest req){
+        Map<String,Object> payload = _jwtUtil.extractPayload(token);
+        String email = payload.get("sub").toString();
+
+        User user = _userRepository.findByEmail(email).orElseThrow(() -> new AppException("User not found"));
+        user.setName(req.getName());
+        user.setGender(Gender.valueOf(req.getGender().toUpperCase()));
+        _userRepository.save(user);
     }
 }
