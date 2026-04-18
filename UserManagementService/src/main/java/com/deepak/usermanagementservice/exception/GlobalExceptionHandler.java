@@ -39,6 +39,9 @@ public class GlobalExceptionHandler {
         if (ex instanceof AppException appEx) {
             return ResponseUtil.error(appEx.getErrors(), HttpStatus.BAD_REQUEST);
         }
+        else if(ex instanceof TokenException jwtEx){
+            return ResponseUtil.error(jwtEx.getErrors(), HttpStatus.FORBIDDEN);
+        }
 
         log.error(ex.getMessage(), ex);
         // rest error

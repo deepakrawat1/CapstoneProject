@@ -1,7 +1,6 @@
 package com.deepak.usermanagementservice.util;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,9 +18,10 @@ public class JWTUtil {
     public String generateToken(String email) {
 
         Map<String, Object> payload = new HashMap<>();
-        Long nowInMills = System.currentTimeMillis();
-        payload.put("iat", nowInMills);
-        payload.put("exp", nowInMills + (60*60*1000));
+        Long nowInSecond = System.currentTimeMillis()/1000;
+        payload.put("iat", nowInSecond);
+        payload.put("nbf", nowInSecond);
+        payload.put("exp", nowInSecond + (60*2));
         payload.put("sub" ,email);
         payload.put("iss", "scaler");
 
@@ -31,14 +31,13 @@ public class JWTUtil {
                 .compact();
     }
 
-    public Map<String,Object> extractPayload(String token){
+    public Map<String,Object> validateAndExtractPayload(String token){
+        Map<String, Object> payload = Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(_secret.getBytes()))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
 
-         Map<String, Object> payload = Jwts.parser()
-                 .verifyWith(Keys.hmacShaKeyFor(_secret.getBytes()))
-                 .build()
-                 .parseSignedClaims(token)
-                 .getPayload();
-
-         return  payload;
+        return  payload;
     }
 }

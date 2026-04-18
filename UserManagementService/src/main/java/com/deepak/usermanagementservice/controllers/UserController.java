@@ -34,16 +34,14 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<ApiResponseData<GetProfileResponse>> profile(@RequestHeader("Authorization") String req){
-        String token = req.split(" ")[1];
-        GetProfileResponse res = _userService.getProfile(token);
+    public ResponseEntity<ApiResponseData<GetProfileResponse>> profile(){
+        GetProfileResponse res = _userService.getProfile();
         return ResponseUtil.success(res, HttpStatus.OK);
     }
 
     @PutMapping("/updateprofile")
-    public ResponseEntity<ApiResponse> updateProfile(@RequestHeader("Authorization") String authHeader,@Valid @RequestBody UpdateProfileRequest req){
-        String token = authHeader.split(" ")[1];
-        _userService.updateProfile(token, req);
+    public ResponseEntity<ApiResponse> updateProfile(@Valid @RequestBody UpdateProfileRequest req){
+        _userService.updateProfile(req);
         return ResponseUtil.success(HttpStatus.OK);
     }
 }

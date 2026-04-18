@@ -8,9 +8,9 @@ import java.util.List;
 public class AppException extends RuntimeException{
     private final List<String> errors;
 
-    public AppException(String message) {
-        super(message);
-        this.errors = List.of(message);
+    public AppException(String error) {
+        super(error);
+        this.errors = List.of(error);
     }
 
     public AppException(List<String> errors) {

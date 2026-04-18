@@ -10,6 +10,7 @@ import com.deepak.usermanagementservice.exception.AppException;
 import com.deepak.usermanagementservice.models.User;
 import com.deepak.usermanagementservice.repositories.UserRepository;
 import com.deepak.usermanagementservice.util.JWTUtil;
+import com.deepak.usermanagementservice.util.UserContext;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -38,6 +39,7 @@ public class UserService {
 
     private final UserRepository _userRepository;
     private final PasswordEncoder _passwordEncoder;
+    private final UserContext _userContext;
     private final JWTUtil _jwtUtil;
 
     public void register(RegisterRequest req) {
@@ -165,11 +167,9 @@ public class UserService {
         }
     }
 
-    public GetProfileResponse getProfile(String token){
+    public GetProfileResponse getProfile(){
         GetProfileResponse res = new GetProfileResponse();
-        Map<String, Object> payload = _jwtUtil.extractPayload(token);
-        String email = payload.get("sub").toString();
-        User user = _userRepository.findByEmail(email).orElseThrow(() -> new AppException("User not found"));
+        User user = _userRepository.findByEmail(_userContext.getEmail()).orElseThrow(() -> new AppException("User not found"));
         res.setName(user.getName());
         res.setEmail(user.getEmail());
         res.setGender(user.getGender().name());
@@ -177,11 +177,8 @@ public class UserService {
         return res;
     }
 
-    public void updateProfile(String token, UpdateProfileRequest req){
-        Map<String,Object> payload = _jwtUtil.extractPayload(token);
-        String email = payload.get("sub").toString();
-
-        User user = _userRepository.findByEmail(email).orElseThrow(() -> new AppException("User not found"));
+    public void updateProfile(UpdateProfileRequest req){
+        User user = _userRepository.findByEmail(_userContext.getEmail()).orElseThrow(() -> new AppException("User not found"));
         user.setName(req.getName());
         user.setGender(Gender.valueOf(req.getGender().toUpperCase()));
         _userRepository.save(user);
