@@ -202,7 +202,7 @@ public class UserService {
         resetPasswordToken.setUser(user);
         resetPasswordToken.setToken(token);
         resetPasswordToken.setUsed(false);
-        resetPasswordToken.setExpiryDate(LocalDateTime.now().plusMinutes(1));
+        resetPasswordToken.setExpiryDate(LocalDateTime.now().plusMinutes(15));
 
         _resetPasswordTokenRepository.save(resetPasswordToken);
 
