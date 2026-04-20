@@ -41,7 +41,15 @@ public class JwtFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
 
         if (header == null || !header.startsWith("Bearer ")) {
+
+            ApiErrorResponse res = new ApiErrorResponse();
+            res.setSuccess(false);
+            res.setErrors(List.of("Missing or invalid token"));
+
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(response.getWriter(), res);
             return;
         }
 
