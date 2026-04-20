@@ -1,14 +1,15 @@
 package com.deepak.usermanagementservice.services;
 
-import com.deepak.usermanagementservice.dto.request.LoginRequest;
-import com.deepak.usermanagementservice.dto.request.RegisterRequest;
-import com.deepak.usermanagementservice.dto.request.UpdateProfileRequest;
+import com.deepak.usermanagementservice.dto.request.*;
 import com.deepak.usermanagementservice.dto.response.GetProfileResponse;
 import com.deepak.usermanagementservice.enums.AuthProvider;
 import com.deepak.usermanagementservice.enums.Gender;
 import com.deepak.usermanagementservice.exception.AppException;
+import com.deepak.usermanagementservice.models.ResetPasswordToken;
 import com.deepak.usermanagementservice.models.User;
+import com.deepak.usermanagementservice.repositories.ResetPasswordTokenRepository;
 import com.deepak.usermanagementservice.repositories.UserRepository;
+import com.deepak.usermanagementservice.util.EmailSender;
 import com.deepak.usermanagementservice.util.JWTUtil;
 import com.deepak.usermanagementservice.util.UserContext;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -22,10 +23,11 @@ import org.springframework.stereotype.Service;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
-
+import java.util.UUID;
 
 
 @Service
@@ -36,11 +38,15 @@ public class UserService {
     private String _googleClientId;
     @Value("${facebook.oauth.url}")
     private  String _facebookOauthUrl;
+    @Value("${base.url}")
+    private String _baseUrl;
 
     private final UserRepository _userRepository;
+    private final ResetPasswordTokenRepository _resetPasswordTokenRepository;
     private final PasswordEncoder _passwordEncoder;
     private final UserContext _userContext;
     private final JWTUtil _jwtUtil;
+    private final EmailSender _emailSender;
 
     public void register(RegisterRequest req) {
         if(_userRepository.findByEmail(req.getEmail()).isPresent()) {
@@ -182,5 +188,60 @@ public class UserService {
         user.setName(req.getName());
         user.setGender(Gender.valueOf(req.getGender().toUpperCase()));
         _userRepository.save(user);
+    }
+
+    public void forgotPassword(ForgotPasswordRequest req){
+        Optional<User> userOptional = _userRepository.findByEmail(req.getEmail());
+
+        if(userOptional.isEmpty()) return;
+
+        User user = userOptional.get();
+
+        String token = UUID.randomUUID().toString();
+        ResetPasswordToken resetPasswordToken = new ResetPasswordToken();
+        resetPasswordToken.setUser(user);
+        resetPasswordToken.setToken(token);
+        resetPasswordToken.setUsed(false);
+        resetPasswordToken.setExpiryDate(LocalDateTime.now().plusMinutes(1));
+
+        _resetPasswordTokenRepository.save(resetPasswordToken);
+
+        String resetLink = _baseUrl+"/api/user/resetpassword?token=" + token;
+
+        String emailBody = """
+                Hello,
+                
+                                You requested to reset your password.
+                
+                                Click the link below to reset your password:
+                                %s
+                
+                                This link will expire in 15 minutes.
+                
+                                If you did not request this, please ignore this email.
+                """.formatted(resetLink);
+
+        _emailSender.send(user.getEmail(), "Password Reset", emailBody);
+    }
+
+    public void resetPassword(ResetPasswordRequest req, String token){
+
+        if(token == null || token.isBlank()) throw new AppException("Invalid link");
+
+        ResetPasswordToken resetPasswordToken = _resetPasswordTokenRepository.findByToken(token).orElseThrow(() -> new AppException("Link expired"));
+
+        if(resetPasswordToken.isUsed()) throw new AppException("Link already used");
+
+        if(resetPasswordToken.getExpiryDate().isBefore(LocalDateTime.now())) throw new AppException("Link expired");
+
+        User user = resetPasswordToken.getUser();
+
+        user.setPassword(_passwordEncoder.encode(req.getPassword()));
+        user.setLastPasswordReset(LocalDateTime.now());
+        _userRepository.save(user);
+
+        resetPasswordToken.setUsed(true);
+
+        _resetPasswordTokenRepository.save(resetPasswordToken);
     }
 }

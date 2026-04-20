@@ -2,9 +2,7 @@ package com.deepak.usermanagementservice.controllers;
 
 import com.deepak.usermanagementservice.dto.ApiResponse;
 import com.deepak.usermanagementservice.dto.ApiResponseData;
-import com.deepak.usermanagementservice.dto.request.LoginRequest;
-import com.deepak.usermanagementservice.dto.request.RegisterRequest;
-import com.deepak.usermanagementservice.dto.request.UpdateProfileRequest;
+import com.deepak.usermanagementservice.dto.request.*;
 import com.deepak.usermanagementservice.dto.response.GetProfileResponse;
 import com.deepak.usermanagementservice.services.UserService;
 import com.deepak.usermanagementservice.util.ResponseUtil;
@@ -43,5 +41,17 @@ public class UserController {
     public ResponseEntity<ApiResponse> updateProfile(@Valid @RequestBody UpdateProfileRequest req){
         _userService.updateProfile(req);
         return ResponseUtil.success(HttpStatus.OK);
+    }
+
+    @PostMapping("/forgotpassword")
+    public ResponseEntity<ApiResponse> forgotPassword(@Valid @RequestBody ForgotPasswordRequest req){
+        _userService.forgotPassword(req);
+        return ResponseUtil.success(HttpStatus.OK, "If an account exists, a password reset link has been sent");
+    }
+
+    @PostMapping("/resetpassword")
+    public ResponseEntity<ApiResponse> resetPassword(@Valid @RequestBody ResetPasswordRequest req, @RequestParam String token){
+        _userService.resetPassword(req, token);
+        return ResponseUtil.success(HttpStatus.OK, "Password reset successfully");
     }
 }

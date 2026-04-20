@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -29,4 +31,6 @@ public class User extends BaseModel {
     private AuthProvider provider;
     @Column(length = 100)
     private String providerId;
+    @Column
+    private LocalDateTime lastPasswordReset;
 }

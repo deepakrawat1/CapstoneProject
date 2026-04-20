@@ -29,6 +29,15 @@ public class ResponseUtil {
         return ResponseEntity.status(status).body(apiResponse);
     }
 
+    public static ResponseEntity<ApiResponse> success(HttpStatus status, String message) {
+
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setSuccess(true);
+        apiResponse.setMessage(message);
+
+        return ResponseEntity.status(status).body(apiResponse);
+    }
+
     public static ResponseEntity<ApiErrorResponse> error(List<String> errors, HttpStatus status) {
 
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse();

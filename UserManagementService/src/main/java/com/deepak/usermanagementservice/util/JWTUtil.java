@@ -21,7 +21,7 @@ public class JWTUtil {
         Long nowInSecond = System.currentTimeMillis()/1000;
         payload.put("iat", nowInSecond);
         payload.put("nbf", nowInSecond);
-        payload.put("exp", nowInSecond + (60*2));
+        payload.put("exp", nowInSecond + (60*10));
         payload.put("sub" ,email);
         payload.put("iss", "scaler");
 
