@@ -27,7 +27,7 @@ public class CategoryMapper {
         GetCategoryByIdResponse res = new GetCategoryByIdResponse();
 
         res.setName(req.getName());
-        res.setDescription(res.getDescription());
+        res.setDescription(req.getDescription());
 
         return res;
     }

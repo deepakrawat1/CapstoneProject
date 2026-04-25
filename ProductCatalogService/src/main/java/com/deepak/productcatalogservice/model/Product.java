@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Product extends BaseModel {
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, unique = false, length = 100)
     private String name;
     @Column(nullable = false)
     private Double price;
@@ -18,7 +18,7 @@ public class Product extends BaseModel {
     private String brand;
     @Column(length = 200)
     private String description;
-    @Column
+    @Column(nullable = false)
     private String imageUrl;
     @Column
     private boolean active = true;

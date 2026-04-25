@@ -54,6 +54,10 @@ public class CategoryService {
     }
 
     public void updateCategory(Long id, UpdateCategoryRequest req){
+
+        Optional<Category> duplicate = _categoryRepository.findByName(req.getName());
+         if(duplicate.isPresent() && duplicate.get().getId().equals(id) == false) throw new AppException("Duplicate name");
+
         Category data = _categoryRepository.findById(id).orElseThrow(() -> new AppException("Category not found"));
 
         data.setName(req.getName());

@@ -42,13 +42,13 @@ public class ProductController {
         return ResponseUtil.success(res._1,res._2, HttpStatus.OK);
     }
 
-    @PutMapping("/id")
+    @PutMapping("/{id}")
     public  ResponseEntity<ApiResponse> updateProduct(@PathVariable Long id, @RequestBody UpdateProductRequest req){
         _productService.updateProduct(id, req);
         return ResponseUtil.success(HttpStatus.OK);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public  ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long id){
         _productService.deleteProduct(id);
         return ResponseUtil.success(HttpStatus.OK);

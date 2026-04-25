@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Setter
+@Getter
 public class GetCategoryByIdResponse {
     private String name;
     private String description;

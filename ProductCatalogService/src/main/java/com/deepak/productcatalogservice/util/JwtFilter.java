@@ -32,10 +32,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        if (path.equals("/api/user/login") || path.equals("/api/user/register") || path.equals("/api/user/forgotpassword") || path.equals("/api/user/resetpassword")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+//        if (path.equals("/api/user/login") || path.equals("/api/user/register") || path.equals("/api/user/forgotpassword") || path.equals("/api/user/resetpassword")) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
 
         String header = request.getHeader("Authorization");
 

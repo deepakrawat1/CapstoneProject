@@ -42,13 +42,13 @@ public class CategoryController {
         return ResponseUtil.success(res._1,res._2, HttpStatus.OK);
     }
 
-    @PutMapping("/id")
+    @PutMapping("/{id}")
     public  ResponseEntity<ApiResponse> updateCategory(@PathVariable Long id, @RequestBody UpdateCategoryRequest req){
         _categoryService.updateCategory(id, req);
         return ResponseUtil.success(HttpStatus.OK);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public  ResponseEntity<ApiResponse> deleteCategory(@PathVariable Long id){
         _categoryService.deleteCategory(id);
         return ResponseUtil.success(HttpStatus.OK);
