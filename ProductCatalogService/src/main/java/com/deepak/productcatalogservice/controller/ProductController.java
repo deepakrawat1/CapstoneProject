@@ -6,7 +6,9 @@ import com.deepak.productcatalogservice.dto.ListApiResponseData;
 import com.deepak.productcatalogservice.dto.request.CreateProductRequest;
 import com.deepak.productcatalogservice.dto.request.UpdateProductRequest;
 import com.deepak.productcatalogservice.dto.response.GetAllProductResponse;
+import com.deepak.productcatalogservice.dto.response.GetProductByCategoryResponse;
 import com.deepak.productcatalogservice.dto.response.GetProductByIdResponse;
+import com.deepak.productcatalogservice.dto.response.GetProductByKeywordResponse;
 import com.deepak.productcatalogservice.service.ProductService;
 import com.deepak.productcatalogservice.util.ResponseUtil;
 import io.vavr.Tuple2;
@@ -52,5 +54,17 @@ public class ProductController {
     public  ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long id){
         _productService.deleteProduct(id);
         return ResponseUtil.success(HttpStatus.OK);
+    }
+
+    @GetMapping("/category/{id}")
+    public ResponseEntity<ListApiResponseData<GetProductByCategoryResponse>> getProductByCategory(@PathVariable Long id, @RequestParam int pageNo, @RequestParam int pageSize){
+        Tuple2<List<GetProductByCategoryResponse>, Long> res = _productService.getProductByCategory(id, pageNo, pageSize);
+        return ResponseUtil.success(res._1, res._2, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ListApiResponseData<GetProductByKeywordResponse>> getProductByKeyword(@RequestParam String keyword){
+        List<GetProductByKeywordResponse> res = _productService.getProductByKeyword(keyword);
+        return ResponseUtil.success(res, res.stream().count(), HttpStatus.OK);
     }
 }

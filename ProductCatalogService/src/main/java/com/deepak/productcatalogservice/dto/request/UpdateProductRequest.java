@@ -1,6 +1,7 @@
 package com.deepak.productcatalogservice.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,6 @@ public class UpdateProductRequest {
     private String imageUrl;
     private boolean active;
     private String attributes;
-    @NotBlank(message = "Category is required")
-    private String category;
+    @NotNull(message = "Category is required")
+    private Long category;
 }

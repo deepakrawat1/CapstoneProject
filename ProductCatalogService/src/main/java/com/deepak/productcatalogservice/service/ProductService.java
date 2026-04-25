@@ -3,7 +3,9 @@ package com.deepak.productcatalogservice.service;
 import com.deepak.productcatalogservice.dto.request.CreateProductRequest;
 import com.deepak.productcatalogservice.dto.request.UpdateProductRequest;
 import com.deepak.productcatalogservice.dto.response.GetAllProductResponse;
+import com.deepak.productcatalogservice.dto.response.GetProductByCategoryResponse;
 import com.deepak.productcatalogservice.dto.response.GetProductByIdResponse;
+import com.deepak.productcatalogservice.dto.response.GetProductByKeywordResponse;
 import com.deepak.productcatalogservice.exception.AppException;
 import com.deepak.productcatalogservice.mapper.ProductMapper;
 import com.deepak.productcatalogservice.model.Category;
@@ -30,7 +32,7 @@ public class ProductService {
 
     public void createProduct(CreateProductRequest req){
 
-        Category category = _categoryRepository.findByName(req.getCategory()).orElseThrow(() -> new AppException("Invalid category"));
+        Category category = _categoryRepository.findById(req.getCategory()).orElseThrow(() -> new AppException("Invalid category"));
 
         Product data = new Product();
 
@@ -67,7 +69,7 @@ public class ProductService {
     public void updateProduct(Long id, UpdateProductRequest req){
         Product data = _productRepository.findById(id).orElseThrow(() -> new AppException("Product not found"));
 
-        Category category = _categoryRepository.findByName(req.getCategory()).orElseThrow(() -> new AppException("Invalid category"));
+        Category category = _categoryRepository.findById(req.getCategory()).orElseThrow(() -> new AppException("Invalid category"));
 
         data.setName(req.getName());
         data.setPrice(req.getPrice());
@@ -85,5 +87,21 @@ public class ProductService {
     public void deleteProduct(Long id){
         if(!_productRepository.existsById(id)) throw new AppException("Product not found");
         _productRepository.deleteById(id);
+    }
+
+    public Tuple2<List<GetProductByCategoryResponse>, Long> getProductByCategory(Long id, int pageNo, int pageSize){
+        pageNo = (pageNo < 0 ? 0 : pageNo);
+        pageSize = (pageSize < 1 ? 10 : pageSize);
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page page = _productRepository.findByCategoryId(id, pageable);
+
+        List<GetProductByCategoryResponse> res = _productMapper.getAllProduct(page.getContent());
+        return Tuple.of(res, page.getTotalElements());
+    }
+
+    public List<GetProductByKeywordResponse> getProductByKeyword(String keyword){
+        List<Product> data = _productRepository.searchByKeyword(keyword);
+        return _productMapper.getProductByKeyword(data);
     }
 }
