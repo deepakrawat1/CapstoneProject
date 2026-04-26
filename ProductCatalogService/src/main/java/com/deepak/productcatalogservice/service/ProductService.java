@@ -96,7 +96,7 @@ public class ProductService {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         Page page = _productRepository.findByCategoryId(id, pageable);
 
-        List<GetProductByCategoryResponse> res = _productMapper.getAllProduct(page.getContent());
+        List<GetProductByCategoryResponse> res = _productMapper.getProductByCategory(page.getContent());
         return Tuple.of(res, page.getTotalElements());
     }
 

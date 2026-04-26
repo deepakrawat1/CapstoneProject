@@ -1,5 +1,6 @@
 package com.deepak.productcatalogservice.mapper;
 
+import com.deepak.productcatalogservice.dto.response.GetAllProductResponse;
 import com.deepak.productcatalogservice.dto.response.GetProductByCategoryResponse;
 import com.deepak.productcatalogservice.dto.response.GetProductByIdResponse;
 import com.deepak.productcatalogservice.dto.response.GetProductByKeywordResponse;
@@ -29,13 +30,13 @@ public class ProductMapper {
         return res;
     }
 
-    public List<GetProductByIdResponse> getAllProduct(List<Product> reqList){
+    public List<GetAllProductResponse> getAllProduct(List<Product> reqList){
         if(reqList == null) return null;
 
-        List<GetProductByIdResponse> result = new ArrayList<>();
+        List<GetAllProductResponse> result = new ArrayList<>();
 
         for(Product req : reqList) {
-            GetProductByIdResponse res = new GetProductByIdResponse();
+            GetAllProductResponse res = new GetAllProductResponse();
             res.setName(req.getName());
             res.setPrice(req.getPrice());
             res.setBrand(req.getBrand());

@@ -13,6 +13,7 @@ public class CreateProductRequest {
     @NotBlank(message = "Name is required")
     @Size(min = 3, max = 50, message = "Name size must be between 3 and 50")
     private String name;
+    @NotNull(message = "Price is required")
     @Min(value = 1, message = "Price must be greater than or equal to 1")
     private Double price;
     @NotBlank(message = "Brand is required")
